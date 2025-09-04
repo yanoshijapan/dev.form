@@ -25,9 +25,8 @@
             padding-top: 70px;
             -webkit-text-size-adjust: 100%;
         }
-        #page-content {
-            display: none;
-        }
+
+        /* Aturan CSS untuk overlay persetujuan */
         #consent-overlay {
             position: fixed;
             top: 0;
@@ -92,6 +91,15 @@
             background-color: #a0a0a0;
             cursor: not-allowed;
         }
+
+        /* Aturan CSS untuk konten utama (diatur oleh JavaScript) */
+        .page-content-visible {
+            display: block;
+        }
+        .page-content-hidden {
+            display: none;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -295,7 +303,8 @@
         </div>
     </div>
 </div>
-<div id="page-content">
+
+<div id="page-content" class="page-content-hidden">
     <header class="fixed-header">
         <div class="header-content">
             <a href="https://yanoshijapan.github.io/jastipyanoshi/" class="header-btn blue-btn">Home</a>
@@ -383,7 +392,7 @@
     const consentCheckbox = document.getElementById('consent-checkbox');
     const agreeButton = document.getElementById('agree-button');
     const pageContent = document.getElementById('page-content');
-    
+
     consentCheckbox.addEventListener('change', () => {
         agreeButton.disabled = !consentCheckbox.checked;
     });
@@ -391,7 +400,8 @@
     agreeButton.addEventListener('click', () => {
         if (consentCheckbox.checked) {
             consentOverlay.style.display = 'none';
-            pageContent.style.display = 'block';
+            pageContent.classList.remove('page-content-hidden');
+            pageContent.classList.add('page-content-visible');
             localStorage.setItem('hasAgreed', 'true');
         }
     });
@@ -400,10 +410,12 @@
         const hasAgreed = localStorage.getItem('hasAgreed');
         if (hasAgreed === 'true') {
             consentOverlay.style.display = 'none';
-            pageContent.style.display = 'block';
+            pageContent.classList.remove('page-content-hidden');
+            pageContent.classList.add('page-content-visible');
         } else {
             consentOverlay.style.display = 'flex';
-            pageContent.style.display = 'none';
+            pageContent.classList.remove('page-content-visible');
+            pageContent.classList.add('page-content-hidden');
         }
         
         loadFormData();
