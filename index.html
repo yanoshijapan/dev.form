@@ -538,9 +538,14 @@
         }
     }
     
+    let isSubmitting = false; // Status untuk mencegah pengiriman ganda
+
     async function submitForm(event) {
-        // Mencegah form submit default
         event.preventDefault();
+
+        // Mencegah pengiriman ganda
+        if (isSubmitting) return;
+        isSubmitting = true;
 
         submitBtn.disabled = true;
         submitBtn.innerText = 'Mengirim...';
@@ -626,6 +631,7 @@
             progressBar.innerText = 'Gagal';
             return false;
         } finally {
+            isSubmitting = false; // Set status kembali ke false
             submitBtn.disabled = false;
             submitBtn.innerText = 'Submit Form';
             belanjaBtn.disabled = false;
@@ -667,18 +673,11 @@
     form.addEventListener('submit', async (e) => {
         const submitter = e.submitter;
         const isBelanjaButton = submitter && submitter.id === 'belanja-btn';
-        
-        // Menjalankan validasi manual hanya jika tombol "belanja" diklik
-        if (isBelanjaButton) {
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                form.reportValidity();
-                return;
-            }
-        }
 
+        // Lakukan pengiriman dan tunggu hasilnya
         const isSuccess = await submitForm(e);
 
+        // Jika berhasil dan tombol "belanja" yang diklik, buka tab baru
         if (isSuccess && isBelanjaButton) {
             window.open(URL_BELANJA, '_blank');
         }
