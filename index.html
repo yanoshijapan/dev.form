@@ -8,21 +8,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #17a2b8;
-            --success-color: #28a745;
-            --error-color: #dc3545;
-            --light-gray: #f9f9f9;
-            --dark-gray: #333;
-            --border-color: #ddd;
-        }
+        /* Gaya dasar body, yang akan dimanipulasi oleh JavaScript */
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--light-gray);
-            color: var(--dark-gray);
+            background-color: #f9f9f9;
+            color: #333;
             margin: 0;
-            padding: 1rem;
-            padding-top: 70px;
+            padding: 0; /* Ubah padding body menjadi 0 */
             -webkit-text-size-adjust: 100%;
         }
 
@@ -81,7 +73,7 @@
             padding: 0.8rem;
             border: none;
             border-radius: 5px;
-            background-color: var(--primary-color);
+            background-color: #17a2b8;
             color: white;
             font-family: 'Poppins', sans-serif;
             cursor: pointer;
@@ -92,17 +84,12 @@
             cursor: not-allowed;
         }
 
-        /* Aturan CSS untuk konten utama (diatur oleh JavaScript) */
-        .page-content-visible {
-            display: block;
-        }
-        .page-content-hidden {
-            display: none;
-        }
-
+        /* Aturan untuk menyembunyikan elemen */
         .hidden {
             display: none !important;
         }
+
+        /* Gaya untuk konten formulir */
         .fixed-header {
             position: fixed;
             top: 0;
@@ -148,7 +135,7 @@
             font-weight: 700;
             text-align: center;
             font-size: 1.5rem;
-            color: var(--dark-gray);
+            color: #333;
         }
         .input-group {
             margin-bottom: 1.25rem;
@@ -161,7 +148,7 @@
         input[type="text"], input[type="tel"], textarea, input[type="file"], select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid #ddd;
             border-radius: 5px;
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
@@ -198,7 +185,7 @@
             text-decoration: none;
             display: block;
             box-sizing: border-box;
-            background-color: var(--primary-color);
+            background-color: #17a2b8;
             color: white;
             transition: background-color 0.3s ease;
         }
@@ -232,7 +219,7 @@
         #progressBar {
             width: 0%;
             height: 25px;
-            background-color: var(--success-color);
+            background-color: #28a745;
             border-radius: 5px;
             text-align: center;
             line-height: 25px;
@@ -249,7 +236,7 @@
             display: none;
             margin-top: 15px;
             padding: 10px 20px;
-            background-color: var(--success-color);
+            background-color: #28a745;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
@@ -304,14 +291,14 @@
     </div>
 </div>
 
-<div id="page-content" class="page-content-hidden">
+<div id="page-content" class="hidden">
     <header class="fixed-header">
         <div class="header-content">
             <a href="https://yanoshijapan.github.io/jastipyanoshi/" class="header-btn blue-btn">Home</a>
         </div>
     </header>
     <div class="container">
-        <h1>Yanoshi Jastip<br>Indonesia - Jepang</h1>
+        <h1 style="padding-top: 2rem;">Yanoshi Jastip<br>Indonesia - Jepang</h1>
         <form id="submissionForm">
             <div class="input-group">
                 <label for="tanggalJastip">Pilih Tanggal Jastip</label>
@@ -392,30 +379,29 @@
     const consentCheckbox = document.getElementById('consent-checkbox');
     const agreeButton = document.getElementById('agree-button');
     const pageContent = document.getElementById('page-content');
-
+    
     consentCheckbox.addEventListener('change', () => {
         agreeButton.disabled = !consentCheckbox.checked;
     });
     
     agreeButton.addEventListener('click', () => {
         if (consentCheckbox.checked) {
-            consentOverlay.style.display = 'none';
-            pageContent.classList.remove('page-content-hidden');
-            pageContent.classList.add('page-content-visible');
+            consentOverlay.classList.add('hidden');
+            pageContent.classList.remove('hidden');
             localStorage.setItem('hasAgreed', 'true');
+            document.body.style.paddingTop = '70px';
         }
     });
 
     document.addEventListener('DOMContentLoaded', () => {
         const hasAgreed = localStorage.getItem('hasAgreed');
         if (hasAgreed === 'true') {
-            consentOverlay.style.display = 'none';
-            pageContent.classList.remove('page-content-hidden');
-            pageContent.classList.add('page-content-visible');
+            consentOverlay.classList.add('hidden');
+            pageContent.classList.remove('hidden');
         } else {
-            consentOverlay.style.display = 'flex';
-            pageContent.classList.remove('page-content-visible');
-            pageContent.classList.add('page-content-hidden');
+            consentOverlay.classList.remove('hidden');
+            pageContent.classList.add('hidden');
+            document.body.style.paddingTop = '0'; // Hapus padding saat modal muncul
         }
         
         loadFormData();
@@ -626,8 +612,8 @@
             }
         } catch (error) {
             statusDiv.innerText = `Error: ${error.message}`;
-            statusDiv.style.color = 'var(--error-color)';
-            progressBar.style.backgroundColor = 'var(--error-color)';
+            statusDiv.style.color = '#dc3545';
+            progressBar.style.backgroundColor = '#dc3545';
             progressBar.innerText = 'Gagal';
             return false;
         } finally {
@@ -636,11 +622,11 @@
             belanjaBtn.disabled = false;
             belanjaBtn.innerText = 'Klik Disini untuk Mulai Belanja';
             setTimeout(() => {
-                if(progressBar.style.backgroundColor !== 'var(--error-color)') {
+                if(progressBar.style.backgroundColor !== '#dc3545') {
                     progressBarContainer.style.display = 'none';
                     progressBar.style.width = '0%';
                 }
-                progressBar.style.backgroundColor = 'var(--success-color)';
+                progressBar.style.backgroundColor = '#28a745';
             }, 5000);
         }
     }
