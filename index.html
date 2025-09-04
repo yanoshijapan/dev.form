@@ -1,277 +1,277 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yanoshi Jastip - Indo-Jepang</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #17a2b8;
-            --success-color: #28a745;
-            --error-color: #dc3545;
-            --light-gray: #f9f9f9;
-            --dark-gray: #333;
-            --border-color: #ddd;
-        }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--light-gray);
-            color: var(--dark-gray);
-            margin: 0;
-            padding: 1rem;
-            padding-top: 70px;
-            -webkit-text-size-adjust: 100%;
-        }
-        /* Aturan CSS yang lebih kuat untuk menyembunyikan elemen */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Gaya untuk overlay persetujuan */
-        #consent-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        #consent-modal {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        #consent-modal h3 {
-            font-family: 'Poppins', sans-serif;
-            margin-top: 0;
-            text-align: center;
-        }
-        #terms-text {
-            max-height: 40vh;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        #terms-text img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 10px 0;
-        }
-        .consent-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-        .consent-controls label {
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        #agree-button {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 5px;
-            background-color: var(--primary-color);
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        #agree-button:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-        }
-
-        /* Gaya untuk konten formulir */
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 10px 0;
-            z-index: 1000;
-        }
-        .header-content {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        .header-btn {
-            padding: 8px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        .blue-btn {
-            background-color: #007bff;
-        }
-        .blue-btn:hover {
-            background-color: #0056b3;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        h1 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            text-align: center;
-            font-size: 1.5rem;
-            color: var(--dark-gray);
-        }
-        .input-group {
-            margin-bottom: 1.25rem;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        input[type="text"], input[type="tel"], textarea, input[type="file"], select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        input[type="file"] {
-            padding: 0.5rem;
-        }
-        .radio-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .radio-group input[type="radio"] {
-            width: auto;
-        }
-        .radio-group label {
-            margin-bottom: 0;
-            font-weight: 400;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 5px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.1rem;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            box-sizing: border-box;
-            background-color: var(--primary-color);
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        .submit-btn:hover:not(:disabled) {
-            background-color: #138496;
-        }
-        .submit-btn:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-        }
-        #preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        #preview-container img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        #progressBarContainer {
-            width: 100%;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            margin-top: 1.25rem;
-            display: none;
-        }
-        #progressBar {
-            width: 0%;
-            height: 25px;
-            background-color: var(--success-color);
-            border-radius: 5px;
-            text-align: center;
-            line-height: 25px;
-            color: white;
-            font-size: 14px;
-            transition: width 0.3s ease;
-        }
-        #status {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: 500;
-        }
-        .whatsapp-btn {
-            display: none;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: var(--success-color);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-        }
-        #belanja-btn {
-            display: none;
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.1rem;
-            cursor: pointer;
-            text-align: center;
-            transition: background-color 0.3s ease;
-            margin-top: 1.25rem;
-        }
-        #belanja-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yanoshi Jastip - Indo-Jepang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #17a2b8;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --light-gray: #f9f9f9;
+            --dark-gray: #333;
+            --border-color: #ddd;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            margin: 0;
+            padding: 1rem;
+            padding-top: 70px;
+            -webkit-text-size-adjust: 100%;
+        }
+        /* Gaya untuk overlay persetujuan */
+        #consent-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        #consent-modal {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        #consent-modal h3 {
+            font-family: 'Poppins', sans-serif;
+            margin-top: 0;
+            text-align: center;
+        }
+        #terms-text {
+            max-height: 40vh;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        #terms-text img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+        .consent-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .consent-controls label {
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        #agree-button {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #agree-button:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+        /* Menambahkan aturan khusus untuk menyembunyikan konten form secara default */
+        #page-content {
+            display: none;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .header-btn {
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .blue-btn {
+            background-color: #007bff;
+        }
+        .blue-btn:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--dark-gray);
+        }
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"], input[type="tel"], textarea, input[type="file"], select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        input[type="file"] {
+            padding: 0.5rem;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .radio-group input[type="radio"] {
+            width: auto;
+        }
+        .radio-group label {
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-sizing: border-box;
+            background-color: var(--primary-color);
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover:not(:disabled) {
+            background-color: #138496;
+        }
+        .submit-btn:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+        #preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        #preview-container img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        #progressBarContainer {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-top: 1.25rem;
+            display: none;
+        }
+        #progressBar {
+            width: 0%;
+            height: 25px;
+            background-color: var(--success-color);
+            border-radius: 5px;
+            text-align: center;
+            line-height: 25px;
+            color: white;
+            font-size: 14px;
+            transition: width 0.3s ease;
+        }
+        #status {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        .whatsapp-btn {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: var(--success-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+        #belanja-btn {
+            display: none;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            margin-top: 1.25rem;
+        }
+        #belanja-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<div id="consent-overlay">
+<div id="consent-overlay" class="hidden">
     <div id="consent-modal">
         <h3>Syarat & Ketentuan Jastip</h3>
         <div id="terms-text">
@@ -379,14 +379,16 @@
     </div>
 </div>
 <script>
-    // ================================================================
-    // === LOGIKA UNTUK MODAL PERSETUJUAN DAN KONTEN UTAMA ===
-    // ================================================================
     const consentOverlay = document.getElementById('consent-overlay');
     const consentCheckbox = document.getElementById('consent-checkbox');
     const agreeButton = document.getElementById('agree-button');
     const pageContent = document.getElementById('page-content');
-    
+    const belanjaYa = document.getElementById('belanjaYa');
+    const belanjaTidak = document.getElementById('belanjaTidak');
+    const barangJastipGroup = document.getElementById('barangJastipGroup');
+    const submitBtn = document.getElementById('submit-btn');
+    const belanjaBtn = document.getElementById('belanja-btn');
+
     consentCheckbox.addEventListener('change', () => {
         agreeButton.disabled = !consentCheckbox.checked;
     });
@@ -430,15 +432,10 @@
     const jamKirimSelect = document.getElementById('jamKirim');
     const fotoInput = document.getElementById('foto');
     const previewContainer = document.getElementById('preview-container');
-    const submitBtn = document.getElementById('submit-btn');
-    const belanjaBtn = document.getElementById('belanja-btn');
     const progressBarContainer = document.getElementById('progressBarContainer');
     const progressBar = document.getElementById('progressBar');
     const statusDiv = document.getElementById('status');
     const whatsappBtn = document.getElementById('whatsapp-btn');
-    const belanjaYa = document.getElementById('belanjaYa');
-    const belanjaTidak = document.getElementById('belanjaTidak');
-    const barangJastipGroup = document.getElementById('barangJastipGroup');
     const URL_BELANJA = 'https://linktr.ee/yanoshijastip';
 
     function saveFormData() {
