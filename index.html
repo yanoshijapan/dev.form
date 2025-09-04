@@ -499,13 +499,11 @@
             barangJastipGroup.classList.add('hidden');
             submitBtn.classList.add('hidden');
             belanjaBtn.style.display = 'block';
-            // Membuat input barangJastip tidak wajib diisi
             barangJastipInput.removeAttribute('required');
         } else if (belanjaTidak.checked) {
             barangJastipGroup.classList.remove('hidden');
             submitBtn.classList.remove('hidden');
             belanjaBtn.style.display = 'none';
-            // Membuat input barangJastip wajib diisi
             barangJastipInput.setAttribute('required', 'required');
         }
     }
@@ -611,7 +609,12 @@
     // ================================================================
     document.addEventListener('DOMContentLoaded', () => {
         loadFormData();
-        toggleBelanjaFields(); // Panggil saat halaman dimuat untuk memastikan status awal
+        toggleBelanjaFields();
+        const hasAgreed = localStorage.getItem('hasAgreed');
+        if (hasAgreed === 'true') {
+            consentOverlay.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+        }
     });
     form.addEventListener('input', saveFormData);
     form.addEventListener('input', () => { window.addEventListener('beforeunload', handleBeforeUnload); });
