@@ -25,9 +25,7 @@
             padding-top: 70px;
             -webkit-text-size-adjust: 100%;
         }
-        .hidden {
-            display: none !important;
-        }
+        /* Gaya untuk overlay persetujuan */
         #consent-overlay {
             position: fixed;
             top: 0;
@@ -92,6 +90,13 @@
             background-color: #a0a0a0;
             cursor: not-allowed;
         }
+        /* Menambahkan aturan khusus untuk menyembunyikan konten form secara default */
+        #page-content {
+            display: none;
+        }
+        .hidden {
+            display: none !important;
+        }
         .fixed-header {
             position: fixed;
             top: 0;
@@ -117,9 +122,6 @@
             font-weight: 500;
             color: white;
             transition: background-color 0.3s ease;
-        }
-        .blue-btn {
-            background-color: #007bff;
         }
         .blue-btn:hover {
             background-color: #0056b3;
@@ -473,7 +475,6 @@
                 const fileReminder = document.createElement('div');
                 fileReminder.style.cssText = 'margin-top: 10px; padding: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; border-radius: 5px;';
                 let fileNames = data.fileInfo.map(f => f.name).join(', ');
-                fileReminder.innerHTML = `<strong>File sebelumnya:</strong> ${fileNames}. <br/><small>Silakan pilih ulang file-file ini.</small>`;
                 fotoInput.parentElement.insertBefore(fileReminder, previewContainer);
             }
         }
