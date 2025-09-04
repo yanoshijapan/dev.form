@@ -246,7 +246,7 @@
             text-align: center;
         }
         #belanja-btn {
-            display: none; /* Awalnya tersembunyi */
+            display: none;
             width: 100%;
             padding: 1rem;
             border: none;
@@ -407,7 +407,7 @@
     const fotoInput = document.getElementById('foto');
     const previewContainer = document.getElementById('preview-container');
     const submitBtn = document.getElementById('submit-btn');
-    const belanjaBtn = document.getElementById('belanja-btn'); // Tombol baru
+    const belanjaBtn = document.getElementById('belanja-btn');
     const progressBarContainer = document.getElementById('progressBarContainer');
     const progressBar = document.getElementById('progressBar');
     const statusDiv = document.getElementById('status');
@@ -415,10 +415,7 @@
     const belanjaYa = document.getElementById('belanjaYa');
     const belanjaTidak = document.getElementById('belanjaTidak');
     const barangJastipGroup = document.getElementById('barangJastipGroup');
-    const URL_BELANJA = 'https://linktr.ee/yanoshijastip'; // Ganti dengan URL belanja yang Anda inginkan
-    // ================================================================
-    // === FUNGSI-FUNGSI BANTU ===
-    // ================================================================
+    const URL_BELANJA = 'https://linktr.ee/yanoshijastip';
     function saveFormData() {
         const fileList = Array.from(fotoInput.files).map(file => ({ name: file.name, size: file.size }));
         const data = {
@@ -497,16 +494,19 @@
             image.onerror = error => reject(error);
         });
     }
-    // Fungsi untuk menampilkan/menyembunyikan kolom "Barang yang Ingin di Jastip" dan tombol
     function toggleBelanjaFields() {
         if (belanjaYa.checked) {
             barangJastipGroup.classList.add('hidden');
             submitBtn.classList.add('hidden');
             belanjaBtn.style.display = 'block';
+            // Membuat input barangJastip tidak wajib diisi
+            barangJastipInput.removeAttribute('required');
         } else if (belanjaTidak.checked) {
             barangJastipGroup.classList.remove('hidden');
             submitBtn.classList.remove('hidden');
             belanjaBtn.style.display = 'none';
+            // Membuat input barangJastip wajib diisi
+            barangJastipInput.setAttribute('required', 'required');
         }
     }
     async function submitForm() {
@@ -609,7 +609,10 @@
     // ================================================================
     // === EVENT LISTENERS ===
     // ================================================================
-    document.addEventListener('DOMContentLoaded', loadFormData);
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFormData();
+        toggleBelanjaFields(); // Panggil saat halaman dimuat untuk memastikan status awal
+    });
     form.addEventListener('input', saveFormData);
     form.addEventListener('input', () => { window.addEventListener('beforeunload', handleBeforeUnload); });
     fotoInput.addEventListener('change', (e) => {
@@ -629,10 +632,8 @@
             reader.readAsDataURL(file);
         }
     });
-    // Listener untuk radio button
     belanjaYa.addEventListener('change', toggleBelanjaFields);
     belanjaTidak.addEventListener('change', toggleBelanjaFields);
-    // Listener untuk submit form (termasuk tombol Submit dan tombol Belanja)
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const isSuccess = await submitForm();
@@ -641,9 +642,13 @@
         }
     });
     belanjaBtn.addEventListener('click', async () => {
-        const isSuccess = await submitForm();
-        if (isSuccess) {
-            window.open(URL_BELANJA, '_blank');
+        if (form.checkValidity()) {
+            const isSuccess = await submitForm();
+            if (isSuccess) {
+                window.open(URL_BELANJA, '_blank');
+            }
+        } else {
+            form.reportValidity();
         }
     });
 </script>
