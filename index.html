@@ -25,6 +25,7 @@
             padding-top: 70px;
             -webkit-text-size-adjust: 100%;
         }
+        /* Pastikan overlay menutupi seluruh halaman */
         #consent-overlay {
             position: fixed;
             top: 0;
@@ -387,6 +388,8 @@
         if (consentCheckbox.checked) {
             consentOverlay.classList.add('hidden');
             mainContent.classList.remove('hidden');
+            // Simpan status persetujuan ke localStorage
+            localStorage.setItem('hasAgreed', 'true');
         }
     });
     // ================================================================
@@ -610,10 +613,15 @@
     document.addEventListener('DOMContentLoaded', () => {
         loadFormData();
         toggleBelanjaFields();
+        // Perbaikan: Langsung periksa local storage saat halaman dimuat
         const hasAgreed = localStorage.getItem('hasAgreed');
         if (hasAgreed === 'true') {
             consentOverlay.classList.add('hidden');
             mainContent.classList.remove('hidden');
+        } else {
+            // Jika belum disetujui, pastikan main content tersembunyi
+            mainContent.classList.add('hidden');
+            consentOverlay.classList.remove('hidden');
         }
     });
     form.addEventListener('input', saveFormData);
