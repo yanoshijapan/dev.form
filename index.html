@@ -564,7 +564,7 @@
         async function fetchProducts() {
             showLoading();
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL + '?action=getData');
                 allProducts = await response.json();
                 renderCategoryGrid(allProducts);
             } catch (error) {
