@@ -25,11 +25,9 @@
             padding-top: 70px;
             -webkit-text-size-adjust: 100%;
         }
-        /* Aturan CSS yang lebih kuat untuk menyembunyikan elemen */
         .hidden {
             display: none !important;
         }
-        /* Gaya untuk overlay persetujuan */
         #consent-overlay {
             position: fixed;
             top: 0;
@@ -94,7 +92,6 @@
             background-color: #a0a0a0;
             cursor: not-allowed;
         }
-        /* Gaya untuk konten formulir */
         .fixed-header {
             position: fixed;
             top: 0;
@@ -269,7 +266,7 @@
     </style>
 </head>
 <body>
-<div id="consent-overlay">
+<div id="consent-overlay" class="hidden">
     <div id="consent-modal">
         <h3>Syarat & Ketentuan Jastip</h3>
         <div id="terms-text">
@@ -410,7 +407,7 @@
         loadFormData();
         toggleBelanjaFields();
     });
-
+    
     // ================================================================
     // === DEKLARASI VARIABEL GLOBAL ===
     // ================================================================
@@ -435,6 +432,7 @@
     const statusDiv = document.getElementById('status');
     const whatsappBtn = document.getElementById('whatsapp-btn');
     const URL_BELANJA = 'https://linktr.ee/yanoshijastip';
+
     function saveFormData() {
         const fileList = Array.from(fotoInput.files).map(file => ({ name: file.name, size: file.size }));
         const data = {
@@ -629,7 +627,7 @@
             }, 5000);
         }
     }
-   
+    
     // ================================================================
     // === EVENT LISTENERS ===
     // ================================================================
