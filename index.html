@@ -25,7 +25,10 @@
             padding-top: 70px;
             -webkit-text-size-adjust: 100%;
         }
-        /* Gaya untuk overlay persetujuan */
+        /* Awalnya, konten halaman tidak terlihat, kecuali overlay */
+        #page-content {
+            display: none;
+        }
         #consent-overlay {
             position: fixed;
             top: 0;
@@ -90,10 +93,6 @@
             background-color: #a0a0a0;
             cursor: not-allowed;
         }
-        /* Menambahkan aturan khusus untuk menyembunyikan konten form secara default */
-        #page-content {
-            display: none;
-        }
         .hidden {
             display: none !important;
         }
@@ -122,6 +121,9 @@
             font-weight: 500;
             color: white;
             transition: background-color 0.3s ease;
+        }
+        .blue-btn {
+            background-color: #007bff;
         }
         .blue-btn:hover {
             background-color: #0056b3;
@@ -268,7 +270,7 @@
     </style>
 </head>
 <body>
-<div id="consent-overlay" class="hidden">
+<div id="consent-overlay">
     <div id="consent-modal">
         <h3>Syarat & Ketentuan Jastip</h3>
         <div id="terms-text">
@@ -294,15 +296,14 @@
         </div>
     </div>
 </div>
-
-<div id="page-content" class="hidden">
+<div id="page-content">
     <header class="fixed-header">
         <div class="header-content">
             <a href="https://yanoshijapan.github.io/jastipyanoshi/" class="header-btn blue-btn">Home</a>
         </div>
     </header>
     <div class="container">
-        <h1 style="padding-top: 2rem;">Yanoshi Jastip<br>Indonesia - Jepang</h1>
+        <h1>Yanoshi Jastip<br>Indonesia - Jepang</h1>
         <form id="submissionForm">
             <div class="input-group">
                 <label for="tanggalJastip">Pilih Tanggal Jastip</label>
@@ -366,7 +367,7 @@
                 <textarea id="barangJastip" name="barangJastip" rows="4" placeholder="Tulis beserta kuantiti / jumlah barang per item&#10;Contoh: tas = 1 pcs, dompet = 2 pcs, dll"></textarea>
             </div>
             <button type="submit" class="submit-btn" id="submit-btn">Submit Form</button>
-            <button type="button" id="belanja-btn">Klik Disini untuk Mulai Belanja</button>
+            <button type="submit" class="submit-btn" id="belanja-btn" formnovalidate>Klik Disini untuk Mulai Belanja</button>
             <div id="progressBarContainer">
                 <div id="progressBar">0%</div>
             </div>
@@ -383,15 +384,15 @@
     const consentCheckbox = document.getElementById('consent-checkbox');
     const agreeButton = document.getElementById('agree-button');
     const pageContent = document.getElementById('page-content');
-   
+    
     consentCheckbox.addEventListener('change', () => {
         agreeButton.disabled = !consentCheckbox.checked;
     });
-   
+    
     agreeButton.addEventListener('click', () => {
         if (consentCheckbox.checked) {
-            consentOverlay.classList.add('hidden');
-            pageContent.classList.remove('hidden');
+            consentOverlay.style.display = 'none';
+            pageContent.style.display = 'block';
             localStorage.setItem('hasAgreed', 'true');
         }
     });
@@ -399,17 +400,17 @@
     document.addEventListener('DOMContentLoaded', () => {
         const hasAgreed = localStorage.getItem('hasAgreed');
         if (hasAgreed === 'true') {
-            consentOverlay.classList.add('hidden');
-            pageContent.classList.remove('hidden');
+            consentOverlay.style.display = 'none';
+            pageContent.style.display = 'block';
         } else {
-            consentOverlay.classList.remove('hidden');
-            pageContent.classList.add('hidden');
+            consentOverlay.style.display = 'flex';
+            pageContent.style.display = 'none';
         }
-       
+        
         loadFormData();
         toggleBelanjaFields();
     });
-   
+
     // ================================================================
     // === DEKLARASI VARIABEL GLOBAL ===
     // ================================================================
@@ -433,6 +434,9 @@
     const progressBar = document.getElementById('progressBar');
     const statusDiv = document.getElementById('status');
     const whatsappBtn = document.getElementById('whatsapp-btn');
+    const belanjaYa = document.getElementById('belanjaYa');
+    const belanjaTidak = document.getElementById('belanjaTidak');
+    const barangJastipGroup = document.getElementById('barangJastipGroup');
     const URL_BELANJA = 'https://linktr.ee/yanoshijastip';
 
     function saveFormData() {
@@ -452,7 +456,7 @@
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
-   
+    
     function loadFormData() {
         const savedData = localStorage.getItem(STORAGE_KEY);
         if (savedData) {
@@ -475,15 +479,16 @@
                 const fileReminder = document.createElement('div');
                 fileReminder.style.cssText = 'margin-top: 10px; padding: 10px; background-color: #f0f0f0; border: 1px dashed #ccc; border-radius: 5px;';
                 let fileNames = data.fileInfo.map(f => f.name).join(', ');
+                fileReminder.innerHTML = `<strong>File sebelumnya:</strong> ${fileNames}. <br/><small>Silakan pilih ulang file-file ini.</small>`;
                 fotoInput.parentElement.insertBefore(fileReminder, previewContainer);
             }
         }
     }
-   
+    
     function clearFormData() {
         localStorage.removeItem(STORAGE_KEY);
     }
-   
+    
     const handleBeforeUnload = (event) => {
         event.preventDefault();
         event.returnValue = '';
@@ -516,7 +521,7 @@
             image.onerror = error => reject(error);
         });
     }
-   
+    
     function toggleBelanjaFields() {
         if (belanjaYa.checked) {
             barangJastipGroup.classList.add('hidden');
@@ -530,8 +535,9 @@
             barangJastipInput.setAttribute('required', 'required');
         }
     }
-   
-    async function submitForm() {
+    
+    async function submitForm(event) {
+        event.preventDefault();
         submitBtn.disabled = true;
         submitBtn.innerText = 'Mengirim...';
         belanjaBtn.disabled = true;
@@ -628,7 +634,6 @@
             }, 5000);
         }
     }
-   
     // ================================================================
     // === EVENT LISTENERS ===
     // ================================================================
@@ -653,25 +658,14 @@
     belanjaTidak.addEventListener('change', toggleBelanjaFields);
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const isSuccess = await submitForm();
-        if (isSuccess && belanjaYa.checked) {
-            window.open(URL_BELANJA, '_blank');
-        }
-    });
-   
-    belanjaBtn.addEventListener('click', async () => {
-        if (form.checkValidity()) {
-            const newWindow = window.open('about:blank', '_blank');
-            const isSuccess = await submitForm();
+        const submitter = e.submitter;
+        if (submitter && submitter.id === 'belanja-btn') {
+            const isSuccess = await submitForm(e);
             if (isSuccess) {
-                newWindow.location.href = URL_BELANJA;
-            } else {
-                if (newWindow) {
-                    newWindow.close();
-                }
+                window.open(URL_BELANJA, '_blank');
             }
         } else {
-            form.reportValidity();
+            await submitForm(e);
         }
     });
 </script>
