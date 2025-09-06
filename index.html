@@ -564,6 +564,7 @@
         async function fetchProducts() {
             showLoading();
             try {
+                // PENTING: Tambahkan "?action=getData" di sini
                 const response = await fetch(API_URL + '?action=getData');
                 allProducts = await response.json();
                 renderCategoryGrid(allProducts);
