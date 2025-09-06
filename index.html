@@ -212,7 +212,7 @@
         /* --- Product List Page --- */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Tampilan 2 kolom untuk mobile */
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
 
@@ -516,19 +516,20 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxfft49o6Y0SDZx-OwAbDgddJksOL63LSFHiq8rInRI3lsEQvCEI-7ypz1K_ePWMSwm/exec';
+        // Ganti dengan URL Apps Script resmi Anda
+        const API_URL = 'YOUR_API_URL_HERE'; 
         const pages = document.querySelectorAll('.page');
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         let allProducts = [];
         const categories = {
             'Aneka Mie': 'https://yanoshijapan.github.io/gambarbelanja/menu1.png',
-            'Aneka Bumbu': 'https://via.placeholder.com/100/A8A8C7?text=Bumbu',
-            'Aneka Sambal': 'https://via.placeholder.com/100/A8A8C7?text=Sambal',
-            'Kopi dan Teh': 'https://via.placeholder.com/100/A8A8C7?text=Kopi',
-            'Snack dan Cemilan': 'https://via.placeholder.com/100/A8A8C7?text=Snack',
-            'Perawatan Tubuh': 'https://via.placeholder.com/100/A8A8C7?text=Perawatan',
-            'Rokok dan Perlengkapan Pribadi': 'https://via.placeholder.com/100/A8A8C7?text=Rokok',
-            'Request Khusus': 'https://via.placeholder.com/100/A8A8C7?text=Request'
+            'Aneka Bumbu': 'https://yanoshijapan.github.io/gambarbelanja/menu2.png',
+            'Aneka Sambal': 'https://yanoshijapan.github.io/gambarbelanja/menu3.png',
+            'Kopi dan Teh': 'https://yanoshijapan.github.io/gambarbelanja/menu4.png',
+            'Snack dan Cemilan': 'https://yanoshijapan.github.io/gambarbelanja/menu5.png',
+            'Perawatan Tubuh': 'https://yanoshijapan.github.io/gambarbelanja/menu6.png',
+            'Rokok dan Perlengkapan Pribadi': 'https://yanoshijapan.github.io/gambarbelanja/menu7.png',
+            'Request Khusus': 'https://yanoshijapan.github.io/gambarbelanja/menu8.png'
         };
 
         // --- Helper Functions ---
@@ -564,12 +565,20 @@
         async function fetchProducts() {
             showLoading();
             try {
-                // PENTING: Tambahkan "?action=getData" di sini
                 const response = await fetch(API_URL + '?action=getData');
-                allProducts = await response.json();
+                const products = await response.json();
+                
+                if (products.error) {
+                    console.error("Error from Apps Script:", products.error);
+                    alert("Gagal memuat data produk: " + products.error);
+                    return;
+                }
+                
+                allProducts = products;
                 renderCategoryGrid(allProducts);
             } catch (error) {
                 console.error('Error fetching products:', error);
+                alert("Terjadi kesalahan koneksi. Silakan coba lagi.");
             } finally {
                 hideLoading();
             }
@@ -579,7 +588,7 @@
             const categoryGrid = document.getElementById('category-grid');
             categoryGrid.innerHTML = '';
             
-            const uniqueCategories = [...new Set(products.map(p => p.kategori))];
+            const uniqueCategories = [...new Set(products.map(p => p.kategori).filter(Boolean))];
             
             uniqueCategories.forEach(category => {
                 const categoryDiv = document.createElement('div');
@@ -594,7 +603,6 @@
                 categoryGrid.appendChild(categoryDiv);
             });
             
-            // Tambahkan "Request Khusus" secara manual
             const requestDiv = document.createElement('div');
             requestDiv.className = 'category-item';
             requestDiv.innerHTML = `<img src="${categories['Request Khusus']}" alt="Request Khusus"><h3>Request Khusus</h3>`;
@@ -609,6 +617,8 @@
             
             if (filteredProducts.length === 0) {
                 productGrid.innerHTML = '<p>Maaf, produk tidak ditemukan.</p>';
+                document.getElementById('product-list-title').textContent = category;
+                showPage('product-list-page');
                 return;
             }
 
@@ -879,7 +889,7 @@
                 hideLoading();
             }
         });
-
+        
         document.getElementById('popup-home-btn').addEventListener('click', () => {
             hidePopup();
             showPage('home-page');
